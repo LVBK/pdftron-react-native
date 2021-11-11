@@ -527,10 +527,10 @@ export class DocumentView extends PureComponent<DocumentViewProps, any> {
     return Promise.resolve();
   }
 
-  addImageStamp = (base64Img: string, pageNumber: number, width: number, height: number, top: number, left: number): Promise<void> => {
+  addImageStamp = (base64Img: string, pageNumber: number, rect: AnnotOptions.Rect): Promise<void> => {
     const tag = findNodeHandle(this._viewerRef);
     if (tag != null) {
-      return DocumentViewManager.addImageStamp(tag, base64Img, pageNumber, width, height, top, left);
+      return DocumentViewManager.addImageStamp(tag, base64Img, pageNumber, rect);
     }
     return Promise.resolve();
   }

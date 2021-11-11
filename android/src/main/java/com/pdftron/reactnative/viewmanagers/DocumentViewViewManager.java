@@ -669,10 +669,10 @@ public class DocumentViewViewManager extends ViewGroupManager<DocumentView> {
         }
     }
 
-    public void addImageStamp(int tag, String base64Img, int pageNumber, int width, int height, int top, int left) throws PDFNetException {
+    public void addImageStamp(int tag, String base64Img, int pageNumber, ReadableMap rect) throws PDFNetException {
         DocumentView documentView = mDocumentViews.get(tag);
         if (documentView != null) {
-            documentView.addImageStamp(base64Img, pageNumber, width, height, top, left);
+            documentView.addImageStamp(base64Img, pageNumber, rect);
         } else {
             throw new PDFNetException("", 0L, getName(), "addImageStamp", "Unable to find DocumentView.");
         }

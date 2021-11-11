@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -47,7 +48,10 @@ import com.pdftron.pdf.Page;
 import com.pdftron.pdf.PageSet;
 import com.pdftron.pdf.Stamper;
 import com.pdftron.pdf.ViewChangeCollection;
+import com.pdftron.pdf.annots.Ink;
 import com.pdftron.pdf.annots.Markup;
+import com.pdftron.pdf.annots.RubberStamp;
+import com.pdftron.pdf.annots.SignatureWidget;
 import com.pdftron.pdf.annots.Widget;
 import com.pdftron.pdf.config.PDFViewCtrlConfig;
 import com.pdftron.pdf.config.ToolConfig;
@@ -3329,18 +3333,33 @@ public class DocumentView extends com.pdftron.pdf.controls.DocumentView2 {
         }
     }
 
-    public void addImageStamp(String base64Img, int pageNumber, int width, int height, int top, int left) {
+    public void addImageStamp(String base64Img, int pageNumber, ReadableMap rectMap) {
+        Log.d("addImageStamp", "here");
         try {
-            byte[] data = Base64.decode(base64Img, Base64.DEFAULT);
-            PDFDoc doc = getPdfDoc();
-            Stamper s = new Stamper(Stamper.e_absolute_size, width, height);
-            s.setAlignment(Stamper.e_horizontal_left, Stamper.e_vertical_top);
-            s.setPosition(left, top);
-            Image img = Image.create(doc, data);
-            PageSet page = new PageSet(pageNumber);
-            s.setAsBackground(false);
-            s.stampImage(doc, img, page);
+            if (rectMap != null && rectMap.hasKey(KEY_X1) && rectMap.hasKey(KEY_Y1) &&
+                    rectMap.hasKey(KEY_X2) && rectMap.hasKey(KEY_Y2)) {
+                double rectX1 = rectMap.getDouble(KEY_X1);
+                double rectY1 = rectMap.getDouble(KEY_Y1);
+                double rectX2 = rectMap.getDouble(KEY_X2);
+                double rectY2 = rectMap.getDouble(KEY_Y2);
+                com.pdftron.pdf.Rect rect = new com.pdftron.pdf.Rect(rectX1, rectY1, rectX2, rectY2);
+                byte[] data = Base64.decode(base64Img, Base64.DEFAULT);
+                PDFDoc doc = getPdfDoc();
+                Page page = doc.getPage(pageNumber);
+                Image img = Image.create(doc, data);
+                SignatureWidget signature = SignatureWidget.create(doc, rect);
+                signature.createSignatureAppearance(img);
+                page.annotPushBack(signature);
+//            Stamper s = new Stamper(Stamper.e_absolute_size, width, height);
+//            s.setAsAnnotation(true);
+//            s.setAlignment(Stamper.e_horizontal_left, Stamper.e_vertical_top);
+//            s.setPosition(left, top);
+//            Image img = Image.create(doc, data);
+//            PageSet page = new PageSet(pageNumber);
+//            s.stampImage(doc, img, page);
+            }
         } catch (Exception e) {
+            Log.d("addImageStamp", e.getMessage());
             e.printStackTrace();
         }
     }

@@ -669,6 +669,15 @@ public class DocumentViewViewManager extends ViewGroupManager<DocumentView> {
         }
     }
 
+    public void addImageStamp(int tag, String base64Img, int pageNumber, int width, int height, int top, int left) throws PDFNetException {
+        DocumentView documentView = mDocumentViews.get(tag);
+        if (documentView != null) {
+            documentView.addImageStamp(base64Img, pageNumber, width, height, top, left);
+        } else {
+            throw new PDFNetException("", 0L, getName(), "addImageStamp", "Unable to find DocumentView.");
+        }
+    }
+
     public void setPropertiesForAnnotation(int tag, String annotId, int pageNumber, ReadableMap propertyMap) throws PDFNetException {
         DocumentView documentView = mDocumentViews.get(tag);
         if (documentView != null) {

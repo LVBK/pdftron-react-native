@@ -527,6 +527,14 @@ export class DocumentView extends PureComponent<DocumentViewProps, any> {
     return Promise.resolve();
   }
 
+  addImageStamp = (base64Img: string, pageNumber: number, width: number, height: number, top: number, left: number): Promise<void> => {
+    const tag = findNodeHandle(this._viewerRef);
+    if (tag != null) {
+      return DocumentViewManager.addImageStamp(tag, base64Img, pageNumber, width, height, top, left);
+    }
+    return Promise.resolve();
+  }
+
   /**
   * note: this function exists for supporting the old version. It simply calls setPropertiesForAnnotation.
   * 

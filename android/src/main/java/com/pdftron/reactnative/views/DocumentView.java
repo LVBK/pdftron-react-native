@@ -3326,6 +3326,22 @@ public class DocumentView extends com.pdftron.pdf.controls.DocumentView2 {
         }
     }
 
+    public void addImageStamp(String base64Img, int pageNumber, int width, int height, int top, int left) {
+        try {
+            byte[] data = Base64.decode(base64Img, Base64.DEFAULT);
+            PDFDoc doc = getPdfDoc();
+            Stamper s = new Stamper(Stamper.e_absolute_size, width, height);
+            s.setAlignment(Stamper.e_horizontal_left, Stamper.e_vertical_top);
+            s.setPosition(left, top);
+            Image img = Image.create(doc, data);
+            PageSet page = new PageSet(pageNumber);
+            s.setAsBackground(false);
+            s.stampImage(doc, img, page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean handleBackButton() {
         if (mPdfViewCtrlTabHostFragment != null) {
             return mPdfViewCtrlTabHostFragment.handleBackPressed();

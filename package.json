@@ -3,7 +3,7 @@
   "title": "React Native Pdftron",
   "version": "3.0.2-beta.17",
   "description": "React Native Pdftron",
-  "main": "./lib/index.js",
+  "main": "./index.ts",
   "typings": "index.ts",
   "scripts": {
     "copy-to-repo": "cd scripts && python3 fileCopy.py toRepo && cd ..",
